@@ -1,6 +1,16 @@
-import {request} from './client.js';
+import {request,download} from './client.js';
 export const loadAll=async()=>Object.fromEntries(await Promise.all(['sources','periods','policies','runs','schedules','deliveries','audits'].map(async k=>[k,await request('/'+k)])));
 export const saveSource=(data,id)=>request('/sources'+(id?'/'+id:''),id?'PUT':'POST',{data});
 export const savePolicy=data=>request('/policies','POST',{data});
 export const submitRun=data=>request('/runs','POST',data);
 export const approveRun=(id,note)=>request('/runs/'+id+'/approve','POST',{note});
+export const purgeRun=id=>request('/runs/'+id,'DELETE');
+export const purgeDelivery=id=>request('/deliveries/'+id,'DELETE');
+export const startMigration=(scope='all')=>request('/archive/migrate?scope='+scope,'POST');
+export const archiveOverview=()=>request('/archive/overview');
+export const archiveBlobs=()=>request('/archive/blobs');
+export const archiveMigrations=()=>request('/archive/migrations');
+export const archiveCorrupt=()=>request('/archive/corrupt');
+export const runGc=()=>request('/archive/gc','POST');
+export const verifyArchive=()=>request('/archive/verify','POST');
+export {download};
